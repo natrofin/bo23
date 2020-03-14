@@ -1,0 +1,33 @@
+{
+  "name": "natsuki",
+  "version": "2.0.0",
+  "description": "",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "author": "Kotya & Kotypey",
+  "license": "ISC",
+  "dependencies": {
+    "@qiwi/bill-payments-node-js-sdk": "^3.1.3",
+    "discord.js": "^11.5.1",
+    "discord.js-minesweeper": "^1.0.5",
+    "dotenv": "^8.2.0",
+    "ffmpeg": "0.0.4",
+    "ffmpeg-binaries": "^4.0.0",
+    "fs": "0.0.1-security",
+    "isgd": "^1.1.3",
+    "moment": "^2.24.0",
+    "moment-duration-format": "^2.3.2",
+    "ms": "^2.1.2",
+    "opusscript": "0.0.7",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.5",
+    "simple-youtube-api": "^5.2.1",
+    "sqlite3": "^4.1.1",
+    "superagent": "^5.1.3",
+    "typeorm": "^0.2.22",
+    "youtube-v3-api": "^1.1.1",
+    "ytdl-core": "^1.0.6"
+  }
+}

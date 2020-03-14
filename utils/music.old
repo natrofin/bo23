@@ -1,0 +1,79 @@
+const ytdl = require('ytdl-core');
+const discord = require('discord.js');
+async function play(connection, message, url, c = true) {
+
+    var server = bot.servers[message.guild.id];
+    if (server.queue.length > 0 && c) {
+        await queue(message, url);
+        return;
+    }
+
+    if (server.queue.length < 1) {
+        await queue(message, url);
+    }
+
+
+    server.dispatcher = await connection.playStream(ytdl(server.queue[0].url), { filter: 'audioonly' })
+
+
+
+    let videoinfo = await ytdl.getInfo(url).catch(err => { console.log(err) });
+    const embed = new discord.RichEmbed()
+        .setColor('#FF8700')
+        .setTitle('🎵 Сейчас играет трек')
+        .addField('Трек', videoinfo.title, true)
+        .addField('От', videoinfo.author.name, true);
+    message.channel.send(embed);
+
+
+    server.dispatcher.on('end', end => {
+        if (server.queue[0]) {
+            play(connection, message, server.queue[0].url, false)//
+
+        }
+
+        else {
+            message.guild.voiceConnection.disconnect();
+        };
+    });
+}
+
+
+async function stop(message) {
+    var server = bot.servers[message.guild.id];
+    if (server.queue == 0) {
+        return message.react('❌')
+    }
+    server.queue = [];
+    server.dispatcher.end();
+}
+async function skip(message) {
+    var server = bot.servers[message.guild.id];
+    if (server.queue == 0) {
+        return message.react('❌')
+    }
+    server.queue.shift();
+    server.dispatcher.end();
+}
+async function queue(message, url) {
+    var server = bot.servers[message.guild.id];
+    let videoinfo = await ytdl.getInfo(url).catch(err => { 
+        message.channel.send('Трек не найден, извините!')
+
+     });
+    const embed = new discord.RichEmbed()
+        .setColor('#8F00FF')
+        .setTitle('🎵 Трек был добавлен в очередь')
+        .addField('Трек', videoinfo.title, true)
+        .addField('От', videoinfo.author.name, true);
+    message.channel.send(embed);
+    server.queue.push({ by: message.author.id, url: url });
+    
+
+}
+module.exports = {
+    play: play,
+    queue: queue,
+    stop: stop,
+    skip: skip
+}
